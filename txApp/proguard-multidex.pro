@@ -1,0 +1,2 @@
+-keep class javax.media.** { *; }
+-keep class org.jitsi.impl.neomedia.protocol.** { *; }

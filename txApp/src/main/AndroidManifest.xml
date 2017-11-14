@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+package below has to be org.jitsi because code taken from jitsi-android makes
+direct reference to generated R class, which must resides in org.jitsi package
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="org.jitsi">
+
+    <uses-permission android:name="android.permission.INTERNET"/> <!-- normal -->
+    <uses-permission android:name="android.permission.CAMERA"/> <!-- dangerous -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/> <!-- dangerous -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/> <!-- normal -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- dangerous -->
+
+    <application
+        android:name=".android.JitsiApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name="my.myusri.jitu.MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <service
+            android:name="my.myusri.jitu.JituService"
+            android:enabled="true"
+            android:exported="false">
+        </service>
+    </application>
+
+</manifest>

@@ -1,0 +1,9 @@
+/build
+/armeabi-v7a/armeabi-v7a/
+/*/config.*
+/*/Makefile
+/*/libs-*-android-gcc.mk
+/*/vpx_config.h
+/*/vpx_config.c
+
+

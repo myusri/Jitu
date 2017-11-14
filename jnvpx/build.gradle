@@ -1,0 +1,42 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "26.0.2"
+
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            abiFilters 'x86', 'armeabi-v7a'
+        }
+        externalNativeBuild{
+            ndkBuild {
+                arguments "NDK_PROJECT_PATH=$projectDir"
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    externalNativeBuild {
+        ndkBuild {
+            path 'jni/Android.mk'
+        }
+    }
+
+    dependencies {
+        testCompile 'junit:junit:4.12'
+    }
+}
