@@ -5,5 +5,4 @@
 /*/libs-*-android-gcc.mk
 /*/vpx_config.h
 /*/vpx_config.c
-
-
+/vpx_version.h
