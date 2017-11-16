@@ -5,7 +5,6 @@
 /*/libs-*-android-gcc.mk
 /*/vpx_config.*
 /*/*rtcd.h
-/vpx_version.h
+/*/vpx_version.h
 /obj
 libvpx
-

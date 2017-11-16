@@ -1,39 +1,36 @@
-Clone `libvpx` in the `jni` directory:
-
-    git clone https://chromium.googlesource.com/webm/libvpx
-
 We want to build for both x86 and ARM targets. There are two target
-directories available in the `jnvpx` project, namely, `x86` and
-`armeabi-v7a`. In each of the target directory, clone the `libvpx`
-project:
+folders available in the `jnvpx` project, namely, `x86` and
+`armeabi-v7a`. Clone the `libvpx` project:
 
     git clone https://chromium.googlesource.com/webm/libvpx armeabi-v7a/libvpx
-    git clone https://chromium.googlesource.com/webm/libvpx x86/libvpx
+    ln -s ../armeabi-v7a/libvpx x86
+    ln -s armeabi-v7a/libvpx .
 
-We could've also create a soft link in `x86` directory to the cloned
-`libvpx` in `armeabi-v7a` directory.
-
-The `jni/Android.mk` will include the appropriate `Android.mk` in the
-target directories depending on the target currently being built.
+The last command is there to avoid failure to build `vpx_config.asm`.
 
 In `armeabi-v7a`, configure to build `libvpx` for ARM:
 
-    libvpx/configure --target=armv7-android-gcc --enable-pic\
+    libvpx/configure --target=armv7-android-gcc\
+     --enable-pic\
      --disable-runtime-cpu-detect\
      --disable-examples --disable-tools --disable-docs\
      --sdk-path=$NDK --extra-cflags="-mfloat-abi=softfp -mfpu=neon"
 
-Assuming `$NDK` refers to Android NDK directory (typically the `ndk-bundle`
-in the SDK directory). `Configure` will create these files:
+Assuming `$NDK` refers to Android NDK folder (typically the `ndk-bundle`
+in the SDK folder). `Configure` will create these files:
 
 * `Makefile`
-* `libs-`*target*`-android-gcc.mk`
+* `libs-armv7-android-gcc.mk`
 * `config.log`
 * `config.mk`
 * `vpx_config.c`
 * `vpx_config.h`
 
-Now in the `x86` directory, configure to build `libvpx` for x86:
+Edit `libs-armv7-android-gcc.mk` and set `BUILD_PFX` to:
+
+    BUILD_PFX=armeabi-v7a/
+
+Now in the `x86` folder, configure to build `libvpx` for x86:
 
     export PATH=$NDK/toolchains/x86-4.9/prebuilt/linux-x86_64/bin:$PATH
     CROSS=i686-linux-android-\
@@ -50,46 +47,20 @@ do this instead:
 
     export PATH=$NDK/toolchains/x86-4.9/prebuilt/darwin-x86_64/bin:$PATH
 
-Run the `ndk-build` in the project directory (the parent of the `jni` directory).
+Edit `libs-x86-android-gcc.mk` and set `BUILD_PFX` to:
 
-    $NDK/ndk-build APP_ABI=armeabi-v7a
+    BUILD_PFX=x86/
 
-Ideally, building `jnvpx` using Gradle/Android Studio would just work
-but it won't. Some target dependent files are created at the right places
-and some would be dropped in the project directory as can be seen below.
-~~~~~~~~~~~~~~
-:jnvpx:externalNativeBuildDebug
-Build jnvpx x86
-    [CREATE] /Users/myusri/work/Jitu/jnvpx/jni/../x86/vp8_rtcd.h
-    [CREATE] vp9_rtcd.h
-    [CREATE] /Users/myusri/work/Jitu/jnvpx/jni/../x86/vpx_scale_rtcd.h
-    [CREATE] /Users/myusri/work/Jitu/jnvpx/jni/../x86/vpx_dsp_rtcd.h
-    [CREATE] vpx_config.asm
-~~~~~~~~~~~~~~
+We need to modify `build/make/Android.mk` a little bit because we are
+building using custom `BUILD_PFX` for each target. Locate this line:
 
-Which will lead to failure when building for ARM target. Move
-`vp9_rtcd.h` and `vpx_config.asm` into the `x86` directory and build
-again.
+    LOCAL_CODEC_SRCS_C = $(filter-out vpx_config.c %_neon.c, $(CODEC_SRCS_C))
 
-Copy `vp9_rtcd.h` and `vpx_config.asm` to `x86` target folder. There
-will also be target files related to ARM generated in `jnvpx` project
-folder as can be seen below.
-~~~~~~~~~~~~~~
-Build jnvpx armeabi-v7a
-    [CREATE] /Users/myusri/work/Jitu/jnvpx/jni/../armeabi-v7a/vp8_rtcd.h
-    [CREATE] vpx_scale_rtcd.h
-    [CREATE] vpx_dsp_rtcd.h
-~~~~~~~~~~~~~~
+And change it to:
 
-Move `vpx_scale_rtcd.h` and `vpx_dsp_rtcd.h` to `armeabi-v7a` target
-directory. It is best also to create a soft link `libvpx` in the project
-directory to `libvpx` directory in either of the targets. This has
-something to do with path to `ads2gas.pl` used in building
-`vpx_config.asm`.
+    LOCAL_CODEC_SRCS_C = $(filter-out %vpx_config.c %_neon.c, $(CODEC_SRCS_C))
 
-Now build `jnvpx` project again. Everything should build fine.
-Copy `vp9_rtcd.h` and `vpx_config.asm` in the project folder to
-`armeabi-v7a` target folder. There will also be target files related to
-ARM generated in `jnvpx` project folder as can be seen below.
+Now you should be able to build `jnvpx` using Gradle/Android Studio. To
+build using Gradle, in the top project folder, issue this command:
 
-
+    ./gradlew :jnvpx:build
