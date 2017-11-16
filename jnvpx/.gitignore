@@ -3,6 +3,9 @@
 /*/config.*
 /*/Makefile
 /*/libs-*-android-gcc.mk
-/*/vpx_config.h
-/*/vpx_config.c
+/*/vpx_config.*
+/*/*rtcd.h
 /vpx_version.h
+/obj
+libvpx
+
