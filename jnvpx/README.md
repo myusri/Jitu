@@ -1,3 +1,6 @@
+*NOTE*: To avoid "relocation R_386_GOTOFF against preemptible symbol" error
+for X86 target, do not use NDK r16 or greater!
+
 We want to build for both x86 and ARM targets. There are two target
 folders available in the `jnvpx` project, namely, `x86` and
 `armeabi-v7a`. Clone the `libvpx` project:
