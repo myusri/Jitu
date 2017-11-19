@@ -58,6 +58,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
     compile project(':jnvpx')
+    compile project(':jnffmpeg')
 
     compile 'net.java.dev.jna:jna:4.5.0'
     compile("org.jitsi:jitsi-util:2.9-SNAPSHOT") { transitive = false  }

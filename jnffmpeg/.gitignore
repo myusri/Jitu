@@ -1,0 +1,10 @@
+/build
+ffmpeg
+/obj
+/*/lib*/
+/*/config.*
+/*/Makefile
+/*/version.h
+/*/.config
+/*/.version
+/*/doc/
