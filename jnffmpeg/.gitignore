@@ -1,10 +1,5 @@
 /build
-ffmpeg
+/jni/ffmpeg
 /obj
-/*/lib*/
-/*/config.*
-/*/Makefile
-/*/version.h
-/*/.config
-/*/.version
-/*/doc/
+/armeabi-v7a
+/x86

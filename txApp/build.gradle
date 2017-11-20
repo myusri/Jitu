@@ -39,6 +39,7 @@ android {
         exclude "win32-x86/**"
         exclude "win32-x86-64/**"
         exclude "OSGI-OPT/**"
+        exclude "com/sun/jna/*/*jnidispatch.*"
     }
 }
 

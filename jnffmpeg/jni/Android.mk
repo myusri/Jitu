@@ -34,5 +34,5 @@ LOCAL_MODULE := jnffmpeg
 LOCAL_SRC_FILES := org_jitsi_impl_neomedia_codec_FFmpeg.c
 LOCAL_LDLIBS := -llog -lm -lz
 LOCAL_STATIC_LIBRARIES := avformat avfilter avcodec swscale swresample avutil
-LOCAL_C_INCLUDES := . $(TARGET_ARCH_ABI) $(TARGET_ARCH_ABI)/ffmpeg
+LOCAL_C_INCLUDES := . $(TARGET_ARCH_ABI) jni/ffmpeg
 include $(BUILD_SHARED_LIBRARY)
