@@ -1,1 +1,1 @@
-include ':javastubs', ':jnvpx', ':txApp', ':jnffmpeg'
+include ':javastubs', ':jnvpx', ':jnffmpeg', ':jnopus',':txApp'

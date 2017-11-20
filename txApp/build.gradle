@@ -60,6 +60,7 @@ dependencies {
 
     compile project(':jnvpx')
     compile project(':jnffmpeg')
+    compile project(':jnopus')
 
     compile 'net.java.dev.jna:jna:4.5.0'
     compile("org.jitsi:jitsi-util:2.9-SNAPSHOT") { transitive = false  }

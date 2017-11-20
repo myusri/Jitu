@@ -1,11 +1,5 @@
 cmake_minimum_required(VERSION 3.4.1)
 
-## libopus
-
-set( opus_src_DIR src/main/jni/ext/libopus )
-set( opus_cmake_DIR src/main/jni/cmake/libopus )
-add_subdirectory( ${opus_cmake_DIR} )
-
 ## libspeex
 
 set( speex_src_DIR src/main/jni/ext/speex )
@@ -22,11 +16,6 @@ add_library(
   jnspeex SHARED
   src/main/jni/jnspeex/org_jitsi_impl_neomedia_codec_audio_speex_Speex.c )
 target_link_libraries( jnspeex speex )
-
-add_library(
-  jnopus SHARED
-  src/main/jni/jnopus/org_jitsi_impl_neomedia_codec_audio_opus_Opus.c )
-target_link_libraries( jnopus opus )
 
 set ( jniLibs_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/main/jniLibs )
  
