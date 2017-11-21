@@ -61,23 +61,29 @@ dependencies {
     compile project(':jnvpx')
     compile project(':jnffmpeg')
     compile project(':jnopus')
+    compile project(':jnspeex')
 
+    task compileJavaStubs {
+        provided project(':javastubs')
+    }
     compile 'net.java.dev.jna:jna:4.5.0'
     compile("org.jitsi:jitsi-util:2.9-SNAPSHOT") { transitive = false  }
 //    compile("org.jitsi:jitsi-lgpl-dependencies:1.0-SNAPSHOT") { transitive = false  }
 //    compile("org.jitsi:fmj:1.0-SNAPSHOT") { transitive = false  }
 //    compile("org.jitsi:jitsi-neomedia:2.9-SNAPSHOT") { transitive = false  }
 
-    compile jarjar.repackage {
-        destinationName = "java-stubs-jarjar.jar"
-        from files('../javastubs/build/classes')
-        classRename "java.awt.**", "org.jitsi.android.util.java.awt.@1"
-        classRename "javax.swing.**", "org.jitsi.android.util.javax.swing.@1"
-        classRename "javax.sound.**", "org.jitsi.android.util.javax.sound.@1"
-        classRename "java.beans.**", "org.jitsi.android.util.java.beans.@1"
+    task jarJarJavaStubs(dependsOn: compileJavaStubs) {
+        compile jarjar.repackage {
+            destinationName = "java-stubs-jarjar.jar"
+            from files('../javastubs/build/classes')
+            classRename "java.awt.**", "org.jitsi.android.util.java.awt.@1"
+            classRename "javax.swing.**", "org.jitsi.android.util.javax.swing.@1"
+            classRename "javax.sound.**", "org.jitsi.android.util.javax.sound.@1"
+            classRename "java.beans.**", "org.jitsi.android.util.java.beans.@1"
+        }
     }
     compile jarjar.repackage {
-        destinationName = "libjisti-jarjar.jar"
+        destinationName = "libjitsi-jarjar.jar"
         from("org.jitsi:libjitsi:1.0-20170927.165735-317") {
             exclude group: "org.hamcrest"
             exclude group: "junit"
