@@ -1,21 +1,8 @@
 cmake_minimum_required(VERSION 3.4.1)
 
-## libspeex
-
-set( speex_src_DIR src/main/jni/ext/speex )
-set( speex_cmake_DIR src/main/jni/cmake/speex )
-add_subdirectory( ${speex_cmake_DIR} )
-
 ## JNI stubs
 
 include_directories( src/main/jniLibs/include )
-include_directories( ${opus_src_DIR}/include )
-include_directories( ${speex_src_DIR}/include )
-
-add_library(
-  jnspeex SHARED
-  src/main/jni/jnspeex/org_jitsi_impl_neomedia_codec_audio_speex_Speex.c )
-target_link_libraries( jnspeex speex )
 
 set ( jniLibs_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/main/jniLibs )
  

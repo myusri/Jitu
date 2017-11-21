@@ -21,6 +21,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 
+import org.jitsi.impl.neomedia.format.AudioMediaFormatImpl;
 import org.jitsi.service.libjitsi.*;
 import org.jitsi.service.neomedia.*;
 import org.jitsi.service.neomedia.device.*;
@@ -138,14 +139,16 @@ public class AVTransmit2
              * assigned.
              */
                 byte dynamicRTPPayloadType;
-
+                MediaFormat format = null;
+                MediaFormatFactory F = mediaService.getFormatFactory();
                 switch (device.getMediaType()) {
                     case AUDIO:
-                        encoding = "PCMU";
-                        clockRate = 8000;
-                        channels = 1;
+                        encoding = "PCMU"; //"opus"; //
+                        clockRate =  8000; // 24000; //
+                        channels =  1; // 2;      //
                 /* PCMU has a static RTP payload type number assigned. */
                         dynamicRTPPayloadType = -1;
+                        format = F.createMediaFormat(encoding, clockRate, channels);
                         break;
                     case VIDEO:
                         encoding = "VP8"; //"H264";
@@ -155,6 +158,7 @@ public class AVTransmit2
                  * in the signaling functionality.
                  */
                         dynamicRTPPayloadType = 99;
+                        format = F.createMediaFormat(encoding, clockRate, channels);
                         break;
                     default:
                         encoding = null;
@@ -163,10 +167,6 @@ public class AVTransmit2
                 }
 
                 if (encoding != null) {
-                    MediaFormat format
-                      = mediaService.getFormatFactory().createMediaFormat(
-                      encoding,
-                      clockRate, channels);
 
                 /*
                  * The MediaFormat instances which do not have a static RTP
