@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/javastubs/javastubs.iml" filepath="$PROJECT_DIR$/javastubs/javastubs.iml" />
       <module fileurl="file://$PROJECT_DIR$/jnandroid/jnandroid.iml" filepath="$PROJECT_DIR$/jnandroid/jnandroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/jnffmpeg/jnffmpeg.iml" filepath="$PROJECT_DIR$/jnffmpeg/jnffmpeg.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jng722/jng722.iml" filepath="$PROJECT_DIR$/jng722/jng722.iml" />
       <module fileurl="file://$PROJECT_DIR$/jnidispatch/jnidispatch.iml" filepath="$PROJECT_DIR$/jnidispatch/jnidispatch.iml" />
       <module fileurl="file://$PROJECT_DIR$/jnopus/jnopus.iml" filepath="$PROJECT_DIR$/jnopus/jnopus.iml" />
       <module fileurl="file://$PROJECT_DIR$/jnspeex/jnspeex.iml" filepath="$PROJECT_DIR$/jnspeex/jnspeex.iml" />

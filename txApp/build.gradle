@@ -55,6 +55,7 @@ dependencies {
 
     compile project(':jnvpx')
     compile project(':jnffmpeg')
+    compile project(':jng722')
     compile project(':jnopus')
     compile project(':jnspeex')
     compile project(':jnandroid')

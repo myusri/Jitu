@@ -143,7 +143,7 @@ public class AVTransmit2
                 MediaFormatFactory F = mediaService.getFormatFactory();
                 switch (device.getMediaType()) {
                     case AUDIO:
-                        encoding = "PCMU"; //"opus"; //
+                        encoding = "G722"; // "PCMU"; //"opus"; //
                         clockRate =  8000; // 24000; //
                         channels =  1; // 2;      //
                 /* PCMU has a static RTP payload type number assigned. */
