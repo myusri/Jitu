@@ -28,6 +28,8 @@ public class MainActivity extends AppCompatActivity
   implements CompoundButton.OnCheckedChangeListener {
 
   private final static String TAG = "MainActivity";
+  private static final int PERMS_REQ = 1000;
+
   ToggleButton tglStart;
 
   public static String getBroadcast() throws SocketException {
@@ -105,12 +107,6 @@ public class MainActivity extends AppCompatActivity
       Log.e(TAG, "Error occurred", ex);
     }
   }
-
-  private static final int PERMS_REQ = 1000;
-  private int hasCameraPerm;
-  private int hasMicPerm;
-  private int hasWritePerm;
-
   private void doStartTransmit() throws Exception {
     String ba = getBroadcast();
     Log.d(TAG, "start transmitting");
@@ -119,9 +115,9 @@ public class MainActivity extends AppCompatActivity
   }
   private void startTransmit() throws Exception {
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-      hasCameraPerm = checkSelfPermission(Manifest.permission.CAMERA);
-      hasMicPerm = checkSelfPermission(Manifest.permission.RECORD_AUDIO);
-      hasWritePerm = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+      int hasCameraPerm = checkSelfPermission(Manifest.permission.CAMERA);
+      int hasMicPerm = checkSelfPermission(Manifest.permission.RECORD_AUDIO);
+      int hasWritePerm = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
       if (hasCameraPerm != PackageManager.PERMISSION_GRANTED
         || hasMicPerm != PackageManager.PERMISSION_GRANTED
         || hasWritePerm != PackageManager.PERMISSION_GRANTED) {
@@ -131,15 +127,10 @@ public class MainActivity extends AppCompatActivity
           Manifest.permission.WRITE_EXTERNAL_STORAGE
           },
           PERMS_REQ);
+        return;
       }
-    } else {
-      hasCameraPerm = hasMicPerm
-        = hasWritePerm = PackageManager.PERMISSION_GRANTED;
     }
-    if (hasCameraPerm == PackageManager.PERMISSION_GRANTED
-      && hasMicPerm == PackageManager.PERMISSION_GRANTED
-      && hasWritePerm == PackageManager.PERMISSION_GRANTED)
-      doStartTransmit();
+    doStartTransmit();
   }
 
   private void stopTransmit() {
@@ -151,9 +142,17 @@ public class MainActivity extends AppCompatActivity
   public void onRequestPermissionsResult(
     int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
     if (requestCode == PERMS_REQ) {
-      hasCameraPerm = grantResults[0];
-      hasMicPerm = grantResults[1];
-      hasWritePerm = grantResults[2];
+      int hasCameraPerm = grantResults[0];
+      int hasMicPerm = grantResults[1];
+      int hasWritePerm = grantResults[2];
+      if (hasCameraPerm == PackageManager.PERMISSION_GRANTED
+              && hasMicPerm == PackageManager.PERMISSION_GRANTED
+              && hasWritePerm == PackageManager.PERMISSION_GRANTED)
+        try {
+          doStartTransmit();
+        } catch (Exception e) {
+          Log.e(TAG, "Problem transmitting", e);
+        }
     }
   }
 }
