@@ -14,8 +14,9 @@ LOCAL_SRC_FILES := $(CELT_SOURCES) $(SILK_SOURCES) $(SILK_SOURCES_FIXED) \
 LOCAL_CFLAGS        := -DNULL=0 -DSOCKLEN_T=socklen_t -DLOCALE_NOT_USED \
                        -D_LARGEFILE_SOURCE=1 -D_FILE_OFFSET_BITS=64 \
                        -Drestrict='' -D__EMX__ -DOPUS_BUILD -DFIXED_POINT \
-                       -DUSE_ALLOCA -DHAVE_LRINT -DHAVE_LRINTF -O2 -fno-math-errno
-LOCAL_CPPFLAGS      := -DBSD=1 -ffast-math -O2 -funroll-loops
+                        -DDISABLE_FLOAT_API \
+                       -DUSE_ALLOCA -DHAVE_LRINT -DHAVE_LRINTF -O3 -fno-math-errno
+LOCAL_CPPFLAGS      := -DBSD=1 -ffast-math -O3 -funroll-loops
 # Note: OPUS enhanced DSP/NEON implementation is not yet compatible with arm64.
 # Only add the appropriate defines for 32-bit arm architecture.
 ifeq ($(TARGET_ARCH_ABI),$(filter $(TARGET_ARCH_ABI), armeabi-v7a))

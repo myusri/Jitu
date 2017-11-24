@@ -1,0 +1,67 @@
+apply plugin: 'com.android.library'
+apply plugin: 'org.anarres.jarjar'
+
+android {
+    compileSdkVersion 26
+    buildToolsVersion "27.0.1"
+
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        ndk {
+            abiFilters 'x86', 'armeabi-v7a'
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:multidex:1.0.2'
+    compile 'com.android.support:appcompat-v7:26.1.0'
+
+    compile project(':jnvpx')
+    compile project(':jnffmpeg')
+    compile project(':jng722')
+    compile project(':jnopus')
+    compile project(':jnspeex')
+    compile project(':jnandroid')
+
+    compile("org.jitsi:jitsi-util:2.9-SNAPSHOT") { transitive = false  }
+    task compileJavaStubs {
+        provided project(':javastubs')
+    }
+    task jarJarJavaStubs(dependsOn: compileJavaStubs) {
+        compile jarjar.repackage {
+            destinationName = "java-stubs-jarjar.jar"
+            from files('../javastubs/build/classes')
+            classRename "java.awt.**", "org.jitsi.android.util.java.awt.@1"
+            classRename "javax.swing.**", "org.jitsi.android.util.javax.swing.@1"
+            classRename "javax.sound.**", "org.jitsi.android.util.javax.sound.@1"
+            classRename "java.beans.**", "org.jitsi.android.util.java.beans.@1"
+        }
+    }
+    compile jarjar.repackage {
+        destinationName = "libjitsi-jarjar.jar"
+        from("org.jitsi:libjitsi:1.0-20170927.165735-317") {
+            exclude group: "org.hamcrest"
+            exclude group: "junit"
+            exclude group: "net.java.dev.jna", module: "jna"
+        }
+        classDelete "org.jitsi.examples.**"
+        classRename "java.awt.**", "org.jitsi.android.util.java.awt.@1"
+        classRename "javax.swing.**", "org.jitsi.android.util.javax.swing.@1"
+        classRename "javax.sound.**", "org.jitsi.android.util.javax.sound.@1"
+        classRename "org.bouncycastle.**", "org.jitsi.bouncycastle.@1"
+    }
+}

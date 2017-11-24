@@ -12,9 +12,6 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-        ndk {
-            abiFilters 'x86', 'armeabi-v7a'
-        }
         multiDexEnabled true
         multiDexKeepProguard file("proguard-multidex.pro")
     }
@@ -39,10 +36,7 @@ android {
 }
 
 dependencies {
-//    sourceCompatibility = 1.7
-//    targetCompatibility = 1.7
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:multidex:1.0.2'
 
     testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -50,48 +44,8 @@ dependencies {
     })
     androidTestCompile 'com.android.support:multidex:1.0.2'
 
-    compile 'com.android.support:appcompat-v7:27.0.0'
+    compile 'com.android.support:appcompat-v7:27.0.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
 
-    compile project(':jnvpx')
-    compile project(':jnffmpeg')
-    compile project(':jng722')
-    compile project(':jnopus')
-    compile project(':jnspeex')
-    compile project(':jnandroid')
-
-    task compileJavaStubs {
-        provided project(':javastubs')
-    }
-    compile 'net.java.dev.jna:jna:4.5.0'
-    compile("org.jitsi:jitsi-util:2.9-SNAPSHOT") { transitive = false  }
-//    compile("org.jitsi:jitsi-lgpl-dependencies:1.0-SNAPSHOT") { transitive = false  }
-//    compile("org.jitsi:fmj:1.0-SNAPSHOT") { transitive = false  }
-//    compile("org.jitsi:jitsi-neomedia:2.9-SNAPSHOT") { transitive = false  }
-
-    task jarJarJavaStubs(dependsOn: compileJavaStubs) {
-        compile jarjar.repackage {
-            destinationName = "java-stubs-jarjar.jar"
-            from files('../javastubs/build/classes')
-            classRename "java.awt.**", "org.jitsi.android.util.java.awt.@1"
-            classRename "javax.swing.**", "org.jitsi.android.util.javax.swing.@1"
-            classRename "javax.sound.**", "org.jitsi.android.util.javax.sound.@1"
-            classRename "java.beans.**", "org.jitsi.android.util.java.beans.@1"
-        }
-    }
-    compile jarjar.repackage {
-        destinationName = "libjitsi-jarjar.jar"
-        from("org.jitsi:libjitsi:1.0-20170927.165735-317") {
-            exclude group: "org.hamcrest"
-            exclude group: "junit"
-            exclude group: "net.java.dev.jna", module: "jna"
-//            exclude group: "org.jitsi", module: "fmj"
-        }
-        classDelete "org.jitsi.examples.**"
-        classRename "java.awt.**", "org.jitsi.android.util.java.awt.@1"
-        classRename "javax.swing.**", "org.jitsi.android.util.javax.swing.@1"
-        classRename "javax.sound.**", "org.jitsi.android.util.javax.sound.@1"
-        classRename "org.bouncycastle.**", "org.jitsi.bouncycastle.@1"
-    }
-//    compile "org.jitsi:jitsi-android-osgi:1.0-SNAPSHOT"
+    compile project(':jitsiandroid')
 }

@@ -9,6 +9,7 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/javastubs" />
+            <option value="$PROJECT_DIR$/jitsiandroid" />
             <option value="$PROJECT_DIR$/jnandroid" />
             <option value="$PROJECT_DIR$/jnffmpeg" />
             <option value="$PROJECT_DIR$/jng722" />

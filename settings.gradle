@@ -1,2 +1,2 @@
-include ':javastubs', ':jnidispatch', ':jnandroid', ':jnvpx', ':jnffmpeg',
+include ':javastubs', ':jnidispatch', ':jnandroid', ':jnvpx', ':jnffmpeg', ':jitsiandroid',
         ':jng722', ':jnopus', ':jnspeex', ':txApp'
