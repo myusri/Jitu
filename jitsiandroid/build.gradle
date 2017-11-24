@@ -37,7 +37,6 @@ dependencies {
     compile project(':jnspeex')
     compile project(':jnandroid')
 
-    compile("org.jitsi:jitsi-util:2.9-SNAPSHOT") { transitive = false  }
     task compileJavaStubs {
         provided project(':javastubs')
     }
@@ -60,8 +59,24 @@ dependencies {
         }
         classDelete "org.jitsi.examples.**"
         classRename "java.awt.**", "org.jitsi.android.util.java.awt.@1"
+        classRename "java.applet.**", "org.jitsi.android.util.java.applet.@1"
         classRename "javax.swing.**", "org.jitsi.android.util.javax.swing.@1"
         classRename "javax.sound.**", "org.jitsi.android.util.javax.sound.@1"
+        classRename "javax.naming.**", "org.jitsi.android.util.javax.naming.@1"
+        classRename "javax.imageio.**", "org.jitsi.android.util.javax.imageio.@1"
         classRename "org.bouncycastle.**", "org.jitsi.bouncycastle.@1"
+
+        classRename "javax.sip.**", "org.jitsi.javax.sip.@1"
+        classRename "gov.nist.core.**", "org.jitsi.gov.nist.core.@1"
+        classRename "gov.nist.javax.sip.**", "org.jitsi.gov.nist.javax.sip.@1"
     }
+    compile jarjar.repackage {
+        destinationName = "jitsi-util-jarjar.jar"
+        from("org.jitsi:jitsi-util:2.9-SNAPSHOT") {
+            transitive = false
+        }
+        classRename "java.awt.**", "org.jitsi.android.util.java.awt.@1"
+        classRename "javax.swing.**", "org.jitsi.android.util.javax.swing.@1"
+    }
+
 }
