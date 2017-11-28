@@ -13,7 +13,7 @@ direct reference to generated R class, which must resides in org.jitsi package
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- dangerous -->
 
     <application
-        android:name=".android.JitsiApplication"
+        android:name="my.myusri.jitu.JituApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"

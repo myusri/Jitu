@@ -1,17 +1,21 @@
 package my.myusri.jitu;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
 import org.jitsi.R;
 import org.jitsi.impl.neomedia.MediaUtils;
+import org.jitsi.impl.neomedia.codec.video.AndroidDecoder;
 import org.jitsi.impl.neomedia.device.util.CameraUtils;
 import org.jitsi.impl.neomedia.device.util.OpenGlCtxProvider;
 import org.jitsi.impl.neomedia.device.util.PreviewSurfaceProvider;
@@ -19,10 +23,10 @@ import org.jitsi.service.libjitsi.*;
 import org.jitsi.service.neomedia.MediaType;
 import org.jitsi.service.neomedia.format.MediaFormat;
 
-import java.net.InterfaceAddress;
-import java.net.NetworkInterface;
-import java.net.SocketException;
-import java.util.Enumeration;
+import java.util.Set;
+import java.util.TreeSet;
+
+import static my.myusri.jitu.JituApplication.showToast;
 
 public class MainActivity extends AppCompatActivity
   implements CompoundButton.OnCheckedChangeListener {
@@ -31,28 +35,25 @@ public class MainActivity extends AppCompatActivity
   private static final int PERMS_REQ = 1000;
 
   ToggleButton tglStart;
+  AutoCompleteTextView txtAddress;
 
-  public static String getBroadcast() throws SocketException {
-    System.setProperty("java.net.preferIPv4Stack", "true");
-    for (Enumeration<NetworkInterface> niEnum = NetworkInterface.getNetworkInterfaces();
-         niEnum.hasMoreElements();) {
-      NetworkInterface ni = niEnum.nextElement();
-      if (!ni.isLoopback()) {
-        for (InterfaceAddress a : ni.getInterfaceAddresses()) {
-          if (a.getBroadcast() != null)
-            return a.getBroadcast().toString().substring(1);
-        }
-      }
-    }
-    return null;
-  }
+  private ArrayAdapter<String> addressList;
+  private SharedPreferences prefs;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    prefs = getPreferences(MODE_PRIVATE);
+
     tglStart = findViewById(R.id.toggleStart);
     tglStart.setOnCheckedChangeListener(this);
+
+    addressList = new ArrayAdapter<>(this, android.R.layout.select_dialog_item);
+    txtAddress = findViewById(R.id.addressText);
+    txtAddress.setThreshold(1);
+    txtAddress.setAdapter(addressList);
 
     String path = getApplicationContext().getFilesDir().getPath();
     System.setProperty(
@@ -62,13 +63,23 @@ public class MainActivity extends AppCompatActivity
     System.setProperty(
       "net.java.sip.communicator.SC_HOME_DIR_LOCATION", path);
 
-    // Setup the video preview surface for the camera source
-    ViewGroup container = findViewById(R.id.mainView);
+    // Set up remote view
+
+    ViewGroup container = findViewById(R.id.remoteView);
+    AndroidDecoder.renderSurfaceProvider
+            = new PreviewSurfaceProvider(
+            this, container, false);
+
+
+    // Set up the video preview surface for the camera source
+
+    container = findViewById(R.id.localView);
     PreviewSurfaceProvider surface = new PreviewSurfaceProvider(
       this, container, true);
     CameraUtils.setPreviewSurfaceProvider(surface);
 
     // Now setup OpenGL context
+
     CameraUtils.localPreviewCtxProvider
       = new OpenGlCtxProvider(this, container);
 
@@ -84,6 +95,29 @@ public class MainActivity extends AppCompatActivity
     for (MediaFormat f : formats) {
       Log.d(TAG, f.toString());
     }
+  }
+
+  @Override
+  protected void onStart() {
+    super.onStart();
+    Set<String> addresses = prefs.getStringSet("addresses", null);
+    if (addresses != null) {
+      addressList.clear();
+      for (String address: addresses)
+        addressList.add(address);
+    }
+  }
+
+  @Override
+  protected void onStop() {
+    TreeSet<String> addresses = new TreeSet<>();
+    for (int i = 0; i < addressList.getCount(); ++i)
+      addresses.add(addressList.getItem(i));
+    SharedPreferences.Editor ed = prefs.edit();
+    ed.putStringSet("addresses", addresses);
+    ed.apply();
+
+    super.onStop();
   }
 
   @Override
@@ -107,12 +141,23 @@ public class MainActivity extends AppCompatActivity
       Log.e(TAG, "Error occurred", ex);
     }
   }
+
   private void doStartTransmit() throws Exception {
-    String ba = getBroadcast();
+    String address = txtAddress.getText().toString().trim();
+    if (address.length() == 0) {
+      showToast("Please provide address");
+      return;
+    }
+    else {
+      addressList.remove(address);
+      addressList.add(address);
+    }
+
     Log.d(TAG, "start transmitting");
-    Log.d(TAG, "broadcast address:" + ba);
-    JituService.startTransmit(this, 7100, ba, 7100);
+    Log.d(TAG, "call address:" + address);
+    JituService.startTransmit(this, 7100, address, 7100);
   }
+
   private void startTransmit() throws Exception {
     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
       int hasCameraPerm = checkSelfPermission(Manifest.permission.CAMERA);

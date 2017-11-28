@@ -6,6 +6,7 @@
     <string name="edit_destination">Enter a number to call</string>
     <string name="edit_username">Enter SIP account</string>
     <string name="edit_password">Enter SIP password</string>
-    <string name="start">Start</string>
-    <string name="stop">Stop</string>
+    <string name="start">Call</string>
+    <string name="stop">Hangup</string>
+    <string name="addressHint">Address to call</string>
 </resources>
